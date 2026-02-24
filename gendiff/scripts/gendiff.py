@@ -70,7 +70,7 @@ def generate_diff(file1, file2):
     data2 = json.load(open(_get_data_path(file2)))
     diff = json.dumps(_find_diff(data1, data2), indent=2)
 
-    return diff.replace('"', '').replace(',', '')
+    print(diff.replace('"', '').replace(',', ''))
 
 
 def main():
