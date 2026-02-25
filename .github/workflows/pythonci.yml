@@ -1,4 +1,4 @@
-name: Gendiff
+name: PythonCI
 
 on:
   - push
