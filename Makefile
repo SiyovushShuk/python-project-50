@@ -1,7 +1,7 @@
 install:
 	uv sync
 
-brain-games:
+gendiff:
 	uv run gendiff
 
 build:
@@ -11,4 +11,17 @@ package-install:
 	uv tool install dist/*.whl
 
 lint:
-	uv run ruff check gendiff
+	uv run ruff check .
+
+test-coverage:
+	uv run pytest --cov=gendiff --cov-report xml
+
+check:
+	 test lint
+
+test:
+	 uv run pytest
+
+.PHONY: install test lint selfcheck check build
+
+
