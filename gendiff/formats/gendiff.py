@@ -1,6 +1,13 @@
 import json
 from typing import Any, Dict, Set
+from pathlib import Path
 
+
+def _get_data_path(filename):
+    try:
+        return next(Path('.').rglob(filename)).resolve()
+    except StopIteration:
+        return None
 
 def _is_line_chanhed(line_one, line_two):
     return line_one != line_two
@@ -83,17 +90,48 @@ def _find_diff(first_file: Dict[str, Any], second_file: Dict[str, Any]
 
 
 def generate_diff(file1, file2):
+    
+    file_extention = get_file_extention(file1, file2)
 
-    if file1 is None or file2 is None:
-        return
+    if file_extention == 'json':
+        print(generate_diff_json(file1, file2), end='')
+    elif file_extention == 'yaml':
+        print(generate_diff_yaml(file1, file2), end='')
+    else:
+        print('Incorrect file format', end='')
 
+
+def get_file_extention(file1, file2):
+    _, file1_extention = file1.split('.')
+    _, file2_extention = file2.split('.')
+
+    if file1_extention and file2_extention == 'json':
+        return 'json'
+    elif file1_extention and file2_extention == 'yaml' \
+        or file1_extention and file2_extention == 'yml':
+        return 'yaml'
+
+
+
+def generate_diff_json(file1, file2):
+
+    file1_path = _get_data_path(file1)
+    file2_path = _get_data_path(file2)
+
+    if file1_path is None or file2_path is None:
+        return 'File not found!'
+    
     try:
-        data1 = json.load(open(file1))
-        data2 = json.load(open(file2))
+        data1 = json.load(open(file1_path))
+        data2 = json.load(open(file2_path))
+        
     except json.decoder.JSONDecodeError:
-        print('Incorrect JSON file uploaded', end='')
-        return
+        return 'Incorrect JSON file uploaded'
 
     diff = json.dumps(_find_diff(data1, data2), indent=2)
 
-    print(diff.replace('"', '').replace(',', ''), end='')
+    return diff.replace('"', '').replace(',', '')
+
+
+def generate_diff_yaml(file1, file2):
+    pass
