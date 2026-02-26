@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from gendiff.formats.gendiff import generate_diff, _get_data_path
+from gendiff.formats.gendiff import generate_diff
 
 
 def test_base(capsys):
@@ -54,12 +54,32 @@ def test_missing_file(capsys):
     assert result.out == 'File not found!'
 
 
-# def test_base_yaml(capsys):
+def test_base_yaml(capsys):
 
-#     generate_diff('file1.yaml', 'file2.yaml')
+    generate_diff('file1.yaml', 'file2.yaml')
 
-#     result = capsys.readouterr()
+    result = capsys.readouterr()
 
-#     correct = Path(__file__).parent / "test_data" / 'correct.txt'
+    correct = Path(__file__).parent / "test_data" / 'correct.txt'
 
-#     assert result.out == open(correct, 'r', encoding='utf-8').read()
+    assert result.out == open(correct, 'r', encoding='utf-8').read()
+
+
+def test_missing_yaml(capsys):
+    
+    generate_diff('missing.yml', 'file2.yaml')
+
+    result = capsys.readouterr()
+
+    assert result.out == 'Incorrect YAML file uploaded'
+
+
+def test_base_yml(capsys):
+
+    generate_diff('file1.yaml', 'file3.yml')
+
+    result = capsys.readouterr()
+
+    correct = Path(__file__).parent / "test_data" / 'correct.txt'
+
+    assert result.out == open(correct, 'r', encoding='utf-8').read()
