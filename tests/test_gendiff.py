@@ -83,3 +83,14 @@ def test_base_yml(capsys):
     correct = Path(__file__).parent / "test_data" / 'correct.txt'
 
     assert result.out == open(correct, 'r', encoding='utf-8').read()
+
+
+def test_difficult_json(capsys):
+
+    generate_diff('difficult_file1.json', 'difficult_file2.json')
+
+    result = capsys.readouterr()
+
+    correct = Path(__file__).parent / "test_data" / 'correct_difficult_data.txt'
+
+    assert result.out == open(correct, 'r', encoding='utf-8').read()
