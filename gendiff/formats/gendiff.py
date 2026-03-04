@@ -57,8 +57,12 @@ def stylish(diff: Dict[str, Any], deep_level: int, key_name):
         formated_lines.append(indent + key + f': {diff[key]}')
     formated_lines.append(((count_spaces - 2) * ' ') + '}')
 
-    return '\n'.join(formated_lines).replace('None', 'null').replace('True', 'true').replace('False', 'false')
-        
+    result = '\n'.join(formated_lines).replace('None',
+                            'null').replace('True',
+                                            'true').replace('False',
+                                                            'false')
+
+    return result
         
 
 def generate_diff(file1, file2):

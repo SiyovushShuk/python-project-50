@@ -17,7 +17,9 @@ def _create_format_line(file, lines, diff, symbol):
     for line in lines:
         if isinstance(file[line], dict):
             formatted_line = {}
-            _create_format_line(file[line], file[line].keys(), formatted_line, ' ')
+            _create_format_line(file[line],
+                                file[line].keys(),
+                                formatted_line, ' ')
             diff[f'{symbol} {line}'] = formatted_line
             continue
         diff[f'{symbol} {line}'] = file[line]
@@ -84,18 +86,30 @@ def _format_differences_in_files(
 
     for line in changed_lines:
 
-        if isinstance(first_file[line], dict) and isinstance(second_file[line], dict):
-            sorted_diff_file[f'  {line}'] = _find_diff(first_file[line], second_file[line])
+        if isinstance(first_file[line], dict) and \
+            isinstance(second_file[line], dict):
+            sorted_diff_file[f'  {line}'] = _find_diff(
+                first_file[line],
+                second_file[line]
+                )
         else:
             if isinstance(first_file[line], dict):
                 formatted_line = {}
-                _create_format_line(first_file[line], first_file[line].keys(), formatted_line, ' ')
+                _create_format_line(
+                    first_file[line],
+                    first_file[line].keys(),
+                    formatted_line, ' '
+                    )
                 sorted_diff_file[f'- {line}'] = formatted_line
                 sorted_diff_file[f'+ {line}'] = second_file[line]
                 continue
             elif isinstance(second_file[line], dict):
                 formatted_line = {}
-                _create_format_line(second_file[line], second_file[line].keys(), formatted_line, ' ')
+                _create_format_line(
+                    second_file[line],
+                    second_file[line].keys(),
+                    formatted_line, ' '
+                    )
                 sorted_diff_file[f'- {line}'] = first_file[line]
                 sorted_diff_file[f'+ {line}'] = formatted_line
                 continue
