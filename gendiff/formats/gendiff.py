@@ -1,45 +1,28 @@
 import json
+from typing import Any, Dict, List
+
 import yaml
-from typing import Any, Dict, Set, List
+
 from gendiff.formats.format_instruments import (
+    _find_diff,
     _get_data_path,
     get_file_extention,
-    _find_diff
 )
 
 
-def generate_diff(file1, file2):
-    
-    file_extention = get_file_extention(file1, file2)
-
-    file1_path = _get_data_path(file1)
-    file2_path = _get_data_path(file2)
-
-    if file1_path is None or file2_path is None:
-        print('File not found!', end='')
-        return
-
-    if file_extention == 'json':
-        print(stylish(generate_diff_json(file1_path, file2_path), 1, ''))
-    elif file_extention == 'yaml':
-        print(generate_diff_yaml(file1_path, file2_path), end='')
-    else:
-        print('Incorrect file format', end='')
-
-
-def generate_diff_json(file1_path, file2_path):
+def load_json(file1_path, file2_path):
     
     try:
         data1 = json.load(open(file1_path))
         data2 = json.load(open(file2_path))
         
     except json.decoder.JSONDecodeError:
-        return 'Incorrect JSON file uploaded'
+        return None
 
     return _find_diff(data1, data2)
 
 
-def generate_diff_yaml(file1_path, file2_path):
+def load_yaml(file1_path, file2_path):
 
     data1 = yaml.safe_load(open(file1_path))
     data2 = yaml.safe_load(open(file2_path))
@@ -48,11 +31,9 @@ def generate_diff_yaml(file1_path, file2_path):
         data1.keys()
         data2.keys()    
     except AttributeError:
-        return 'Incorrect YAML file uploaded'
+        return None
 
-    diff = json.dumps(_find_diff(data1, data2), indent=4)
-
-    return diff.replace('"', '').replace(',', '')
+    return _find_diff(data1, data2)
 
 
 def stylish(diff: Dict[str, Any], deep_level: int, key_name):
@@ -76,10 +57,36 @@ def stylish(diff: Dict[str, Any], deep_level: int, key_name):
         formated_lines.append(indent + key + f': {diff[key]}')
     formated_lines.append(((count_spaces - 2) * ' ') + '}')
 
-    return '\n'.join(formated_lines)
+    return '\n'.join(formated_lines).replace('None', 'null').replace('True', 'true').replace('False', 'false')
         
         
 
+def generate_diff(file1, file2):
+
+    file1_path = _get_data_path(file1)
+    file2_path = _get_data_path(file2)
+
+    if file1_path is None or file2_path is None:
+        print('File not found!', end='')
+        return
+    
+    file_extention = get_file_extention(file1, file2)
+
+    if file_extention == 'json':
+        loaded_file = load_json(file1_path, file2_path)
+        if loaded_file is None:
+            print('Incorrect JSON file uploaded', end='')
+            return
+        print(stylish(loaded_file, 1, ''), end='')
+    elif file_extention == 'yaml':
+        loaded_file = load_yaml(file1_path, file2_path)
+        if loaded_file is None:
+            print('Incorrect YAML file uploaded', end='')
+            return
+        print(stylish(loaded_file, 1, ''), end='')
+    else:
+        print('Incorrect file format or loaded files with different extentions',
+               end='')
 
     
     

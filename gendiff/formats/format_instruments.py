@@ -119,3 +119,5 @@ def get_file_extention(file1, file2):
     elif file1_extention and file2_extention == 'yaml' \
         or file1_extention and file2_extention == 'yml':
         return 'yaml'
+    else:
+        return None
