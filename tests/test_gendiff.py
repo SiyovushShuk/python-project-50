@@ -94,3 +94,24 @@ def test_difficult_json(capsys):
     correct = Path(__file__).parent / "test_data" / 'correct_difficult_data.txt'
 
     assert result.out == open(correct, 'r', encoding='utf-8').read()
+
+
+def test_different_file_extentions(capsys):
+    generate_diff('file1.json', 'file2.yaml')
+
+    result = capsys.readouterr()
+
+    correct = Path(__file__).parent / "test_data" / 'correct.txt'
+
+    assert result.out == open(correct, 'r', encoding='utf-8').read()
+
+
+def test_difficult_yaml(capsys):
+
+    generate_diff('difficult_file1.yml', 'difficult_file2.yaml')
+
+    result = capsys.readouterr()
+
+    correct = Path(__file__).parent / "test_data" / 'correct_difficult_data.txt'
+
+    assert result.out == open(correct, 'r', encoding='utf-8').read()
