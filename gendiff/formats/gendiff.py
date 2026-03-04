@@ -1,16 +1,25 @@
 import json
-from typing import Any, Dict, List
+from pathlib import Path
+from typing import Any, Dict
 
 import yaml
 
 from gendiff.formats.format_instruments import (
-    _find_diff,
     _get_data_path,
+    add_indent,
+    create_stylish_diff,
+    find_diff,
     get_file_extention,
 )
 
 
-def load_json(file1_path, file2_path):
+def create_stylish_format(data1: Dict[str, Any], data2: Dict[str, Any]) -> str:
+    dict_diff = find_diff(data1, data2)
+    formated_diff = add_indent(create_stylish_diff(*dict_diff.values()))
+    return formated_diff
+
+
+def load_json(file1_path: Path, file2_path: Path) -> None | str:
     
     try:
         data1 = json.load(open(file1_path))
@@ -19,10 +28,10 @@ def load_json(file1_path, file2_path):
     except json.decoder.JSONDecodeError:
         return None
 
-    return _find_diff(data1, data2)
+    return create_stylish_format(data1, data2)
 
 
-def load_yaml(file1_path, file2_path):
+def load_yaml(file1_path: Path, file2_path: Path) -> None | str:
 
     data1 = yaml.safe_load(open(file1_path))
     data2 = yaml.safe_load(open(file2_path))
@@ -32,40 +41,11 @@ def load_yaml(file1_path, file2_path):
         data2.keys()    
     except AttributeError:
         return None
-
-    return _find_diff(data1, data2)
-
-
-def stylish(diff: Dict[str, Any], deep_level: int, key_name):
-
-    count_spaces = (4 * deep_level) - 2
-    if deep_level - 1 == 0:
-        begin_str = '{'
-    else:
-        begin_str = (((4 * (deep_level - 1)) - 2) * ' ') + f'{key_name}: ' + '{'
-    indent = count_spaces * ' '
-
-    formated_lines: List = [begin_str]
     
-    keys = diff.keys()
-
-    for key in keys:
-        if isinstance(diff[key], dict):
-            formated_lines.append(stylish(diff[key], deep_level + 1, key))
-            continue
-        
-        formated_lines.append(indent + key + f': {diff[key]}')
-    formated_lines.append(((count_spaces - 2) * ' ') + '}')
-
-    result = '\n'.join(formated_lines).replace('None',
-                            'null').replace('True',
-                                            'true').replace('False',
-                                                            'false')
-
-    return result
+    return create_stylish_format(data1, data2)
         
 
-def generate_diff(file1, file2, format_name='stylish'):
+def generate_diff(file1: str, file2: str, format_name: str = 'stylish') -> None:
 
     if format_name != 'stylish':
         return
@@ -80,17 +60,17 @@ def generate_diff(file1, file2, format_name='stylish'):
     file_extention = get_file_extention(file1, file2)
 
     if file_extention == 'json':
-        loaded_file = load_json(file1_path, file2_path)
-        if loaded_file is None:
+        formated_diff = load_json(file1_path, file2_path)
+        if formated_diff is None:
             print('Incorrect JSON file uploaded', end='')
             return
-        print(stylish(loaded_file, 1, ''), end='')
+        print(formated_diff, end='')
     elif file_extention == 'yaml':
-        loaded_file = load_yaml(file1_path, file2_path)
-        if loaded_file is None:
+        formated_diff = load_yaml(file1_path, file2_path)
+        if formated_diff is None:
             print('Incorrect YAML file uploaded', end='')
             return
-        print(stylish(loaded_file, 1, ''), end='')
+        print(formated_diff, end='')
     else:
         print('Incorrect file format or loaded files with different extentions',
                end='')

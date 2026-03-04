@@ -1,5 +1,5 @@
 from pathlib import Path
-from typing import Any, Dict, Set
+from typing import Any, Dict, List, Set
 
 
 def _get_data_path(filename):
@@ -38,8 +38,12 @@ def _sort_logic(item, sybmol_priority='-'):
         return clean_line, ord(first_symbol)
     
 
-def _find_diff(first_file: Dict[str, Any], second_file: Dict[str, Any]
+def find_diff(first_file: Dict[str, Any], second_file: Dict[str, Any]
                ) -> Dict[str, Any]:
+    
+    diff: Dict = {}
+    diff['first_file'] = first_file
+    diff['second_file'] = second_file
 
     first_file_lines = first_file.keys()
     second_file_lines = second_file.keys()
@@ -48,6 +52,9 @@ def _find_diff(first_file: Dict[str, Any], second_file: Dict[str, Any]
 
     only_in_first = first_file_lines - second_file_lines
     only_in_second = second_file_lines - first_file_lines
+
+    diff['only_in_first'] = only_in_first
+    diff['only_in_second'] = only_in_second
 
     unchanged_lines: Set = set()
     changed_lines: Set = set()
@@ -58,26 +65,21 @@ def _find_diff(first_file: Dict[str, Any], second_file: Dict[str, Any]
         else:
             unchanged_lines.add(name_line)
 
-    diff: Dict = {}
-
-    diff = _format_differences_in_files(first_file,
-                                        second_file,
-                                        only_in_first,
-                                        only_in_second,
-                                        unchanged_lines,
-                                        changed_lines)
+    diff['unchanged_lines'] = unchanged_lines
+    diff['changed_lines'] = changed_lines
 
     return diff
     
 
-def _format_differences_in_files(
+def create_stylish_diff(
         first_file: Dict[str, Any],
         second_file: Dict[str, Any],
-        only_in_first,
-        only_in_second,
-        unchanged_lines,
-        changed_lines
-        ):
+        only_in_first: Set[str],
+        only_in_second: Set[str],
+        unchanged_lines: Set[str],
+        changed_lines: Set[str],
+        /
+        ) -> Dict[str, Any]:
     sorted_diff_file: Dict = {}
 
     _create_format_line(first_file, only_in_first, sorted_diff_file, '-')
@@ -88,10 +90,9 @@ def _format_differences_in_files(
 
         if isinstance(first_file[line], dict) and \
             isinstance(second_file[line], dict):
-            sorted_diff_file[f'  {line}'] = _find_diff(
-                first_file[line],
-                second_file[line]
-                )
+            children_diff = find_diff(first_file[line], second_file[line])
+            formated_children = create_stylish_diff(*children_diff.values())
+            sorted_diff_file[f'  {line}'] = formated_children
         else:
             if isinstance(first_file[line], dict):
                 formatted_line = {}
@@ -124,7 +125,40 @@ def _format_differences_in_files(
     return sorted_diff_file
 
 
-def get_file_extention(file1, file2):
+def add_indent(
+        diff: Dict[str, Any],
+        deep_level: int = 1,
+        key_name: str = ''
+    ) -> str:
+
+    count_spaces = (4 * deep_level) - 2
+    if deep_level - 1 == 0:
+        begin_str = '{'
+    else:
+        begin_str = (((4 * (deep_level - 1)) - 2) * ' ') + f'{key_name}: ' + '{'
+    indent = count_spaces * ' '
+
+    formated_lines: List = [begin_str]
+    
+    keys = diff.keys()
+
+    for key in keys:
+        if isinstance(diff[key], dict):
+            formated_lines.append(add_indent(diff[key], deep_level + 1, key))
+            continue
+        
+        formated_lines.append(indent + key + f': {diff[key]}')
+    formated_lines.append(((count_spaces - 2) * ' ') + '}')
+
+    result = '\n'.join(formated_lines).replace('None',
+                            'null').replace('True',
+                                            'true').replace('False',
+                                                            'false')
+
+    return result
+
+
+def get_file_extention(file1: str, file2: str) -> str | None:
     _, file1_extention = file1.split('.')
     _, file2_extention = file2.split('.')
 
