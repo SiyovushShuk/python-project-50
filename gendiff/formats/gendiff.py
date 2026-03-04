@@ -65,7 +65,10 @@ def stylish(diff: Dict[str, Any], deep_level: int, key_name):
     return result
         
 
-def generate_diff(file1, file2):
+def generate_diff(file1, file2, format_name='stylish'):
+
+    if format_name != 'stylish':
+        return
 
     file1_path = _get_data_path(file1)
     file2_path = _get_data_path(file2)
