@@ -16,11 +16,11 @@ def _is_line_changed(line_one, line_two):
 def _create_format_line(file, lines, diff, symbol):
     for line in lines:
         if isinstance(file[line], dict):
-            formatted_line = {}
+            formatted__children_line = {}
             _create_format_line(file[line],
                                 file[line].keys(),
-                                formatted_line, ' ')
-            diff[f'{symbol} {line}'] = formatted_line
+                                formatted__children_line, ' ')
+            diff[f'{symbol} {line}'] = formatted__children_line
             continue
         diff[f'{symbol} {line}'] = file[line]
 
@@ -41,9 +41,9 @@ def _sort_logic(item, sybmol_priority='-'):
 def find_diff(first_file: Dict[str, Any], second_file: Dict[str, Any]
                ) -> Dict[str, Any]:
     
-    diff: Dict = {}
-    diff['first_file'] = first_file
-    diff['second_file'] = second_file
+    line_diff: Dict = {}
+    line_diff['first_file'] = first_file
+    line_diff['second_file'] = second_file
 
     first_file_lines = first_file.keys()
     second_file_lines = second_file.keys()
@@ -53,8 +53,8 @@ def find_diff(first_file: Dict[str, Any], second_file: Dict[str, Any]
     only_in_first = first_file_lines - second_file_lines
     only_in_second = second_file_lines - first_file_lines
 
-    diff['only_in_first'] = only_in_first
-    diff['only_in_second'] = only_in_second
+    line_diff['only_in_first'] = only_in_first
+    line_diff['only_in_second'] = only_in_second
 
     unchanged_lines: Set = set()
     changed_lines: Set = set()
@@ -65,10 +65,10 @@ def find_diff(first_file: Dict[str, Any], second_file: Dict[str, Any]
         else:
             unchanged_lines.add(name_line)
 
-    diff['unchanged_lines'] = unchanged_lines
-    diff['changed_lines'] = changed_lines
+    line_diff['unchanged_lines'] = unchanged_lines
+    line_diff['changed_lines'] = changed_lines
 
-    return diff
+    return line_diff
     
 
 def create_stylish_diff(
@@ -80,11 +80,11 @@ def create_stylish_diff(
         changed_lines: Set[str],
         /
         ) -> Dict[str, Any]:
-    sorted_diff_file: Dict = {}
+    formated_diff: Dict = {}
 
-    _create_format_line(first_file, only_in_first, sorted_diff_file, '-')
-    _create_format_line(second_file, only_in_second, sorted_diff_file, '+')
-    _create_format_line(first_file, unchanged_lines, sorted_diff_file, ' ')
+    _create_format_line(first_file, only_in_first, formated_diff, '-')
+    _create_format_line(second_file, only_in_second, formated_diff, '+')
+    _create_format_line(first_file, unchanged_lines, formated_diff, ' ')
 
     for line in changed_lines:
 
@@ -92,37 +92,35 @@ def create_stylish_diff(
             isinstance(second_file[line], dict):
             children_diff = find_diff(first_file[line], second_file[line])
             formated_children = create_stylish_diff(*children_diff.values())
-            sorted_diff_file[f'  {line}'] = formated_children
+            formated_diff[f'  {line}'] = formated_children
+        elif isinstance(first_file[line], dict):
+            formatted_children_line = {}
+            _create_format_line(
+                first_file[line],
+                first_file[line].keys(),
+                formatted_children_line, ' '
+                )
+            formated_diff[f'- {line}'] = formatted_children_line
+            formated_diff[f'+ {line}'] = second_file[line]
+        elif isinstance(second_file[line], dict):
+            formatted_children_line = {}
+            _create_format_line(
+                second_file[line],
+                second_file[line].keys(),
+                formatted_children_line, ' '
+                )
+            formated_diff[f'- {line}'] = first_file[line]
+            formated_diff[f'+ {line}'] = formatted_children_line
         else:
-            if isinstance(first_file[line], dict):
-                formatted_line = {}
-                _create_format_line(
-                    first_file[line],
-                    first_file[line].keys(),
-                    formatted_line, ' '
-                    )
-                sorted_diff_file[f'- {line}'] = formatted_line
-                sorted_diff_file[f'+ {line}'] = second_file[line]
-                continue
-            elif isinstance(second_file[line], dict):
-                formatted_line = {}
-                _create_format_line(
-                    second_file[line],
-                    second_file[line].keys(),
-                    formatted_line, ' '
-                    )
-                sorted_diff_file[f'- {line}'] = first_file[line]
-                sorted_diff_file[f'+ {line}'] = formatted_line
-                continue
-            sorted_diff_file[f'- {line}'] = first_file[line]
-            sorted_diff_file[f'+ {line}'] = second_file[line]
+            formated_diff[f'- {line}'] = first_file[line]
+            formated_diff[f'+ {line}'] = second_file[line]
 
-    sorted_diff_file = dict(sorted(
-        sorted_diff_file.items(),
+    sorted_diff = dict(sorted(
+        formated_diff.items(),
         key=lambda item: _sort_logic(item)
     ))
 
-    return sorted_diff_file
+    return sorted_diff
 
 
 def add_indent(
@@ -150,10 +148,14 @@ def add_indent(
         formated_lines.append(indent + key + f': {diff[key]}')
     formated_lines.append(((count_spaces - 2) * ' ') + '}')
 
-    result = '\n'.join(formated_lines).replace('None',
-                            'null').replace('True',
-                                            'true').replace('False',
-                                                            'false')
+    result = '\n'.join(formated_lines).replace(
+                                        'None',
+                                        'null'
+                                        ).replace(
+                                            'True',
+                                            'true').replace(
+                                                    'False',
+                                                    'false')
 
     return result
 
