@@ -4,7 +4,7 @@ from typing import Any, Dict
 
 import yaml
 
-from gendiff.formats.format_instruments import (
+from gendiff.formats.general_format_instruments import (
     _get_data_path,
     add_indent,
     create_stylish_diff,
