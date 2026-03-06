@@ -115,3 +115,14 @@ def test_difficult_yaml(capsys):
     correct = Path(__file__).parent / "test_data" / 'correct_difficult_data.txt'
 
     assert result.out == open(correct, 'r', encoding='utf-8').read()
+
+
+def test_difficult_json_plain(capsys):
+
+    generate_diff('difficult_file1.json', 'difficult_file2.json', 'plain')
+
+    result = capsys.readouterr()
+
+    correct = Path(__file__).parent / "test_data" / 'correct_difficult_plain_data.txt'  # noqa: E501
+
+    assert result.out == open(correct, 'r', encoding='utf-8').read()
