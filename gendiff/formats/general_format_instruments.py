@@ -164,10 +164,12 @@ def get_file_extention(file1: str, file2: str) -> str | None:
     _, file1_extention = file1.split('.')
     _, file2_extention = file2.split('.')
 
-    if file1_extention and file2_extention == 'json':
+    yaml_extentions = ['yaml', 'yml']
+
+    if file1_extention == 'json' and file2_extention == 'json':
         return 'json'
-    elif file1_extention and file2_extention == 'yaml' \
-        or file1_extention and file2_extention == 'yml':
+    elif file1_extention in yaml_extentions \
+        and file2_extention in yaml_extentions:
         return 'yaml'
     else:
         return None

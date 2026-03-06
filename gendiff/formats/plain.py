@@ -3,7 +3,7 @@ from typing import Any, Dict, List, Set
 from gendiff.formats.general_format_instruments import find_diff
 
 
-def format_complex_str_value(value: Any):
+def format_complex_str_value(value: Any) -> str | Any:
 
     if isinstance(value, str):
         return f"'{value}'"
@@ -13,26 +13,41 @@ def format_complex_str_value(value: Any):
         return value
 
 
-def create_parent_property(parent_property, key):
+def create_parent_property(parent_property: str, key: str) -> str:
     if parent_property == '':
         return key
     return f'{parent_property}.{key}'
 
 
-def create_added_line(file, keys, lines, parent_property: str = ''):
+def create_added_line(
+        file: Dict[str, Any],
+        keys: List[str], lines: List[str],
+        parent_property: str = ''
+    ) -> None:
+
     for key in keys:
         value = format_complex_str_value(file[key])
         property_path = create_parent_property(parent_property, key)
         lines.append(f"Property '{property_path}' was added with value: {value}")  # noqa: E501
 
 
-def create_removed_line(keys, lines, parent_property: str = ''):
+def create_removed_line(
+        keys: List[str], lines: List[str],
+        parent_property: str = ''
+    ) -> None:
+
     for key in keys:
         property_path = create_parent_property(parent_property, key)
         lines.append(f"Property '{property_path}' was removed")
 
 
-def create_update_line(file1, file2, keys, lines, parent_property: str = ''):
+def create_update_line(
+        file1: Dict[str, Any],
+        file2: Dict[str, Any],
+        keys: List[str],
+        lines, parent_property: str = ''
+    ) -> None:
+
     for key in keys:
         property_path = create_parent_property(parent_property, key)
         first_value = file1[key]
@@ -71,7 +86,7 @@ def create_plain_diff(first_file: Dict[str, Any],
         unchanged_lines: Set[str],
         changed_lines: Set[str],
         /
-        ):
+        ) -> str:
     
     lines: List[str] = []
 
