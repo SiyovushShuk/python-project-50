@@ -1,25 +1,17 @@
 import json
 from pathlib import Path
-from typing import Any, Dict
 
 import yaml
 
 from gendiff.formats.general_format_instruments import (
     _get_data_path,
-    add_indent,
-    create_stylish_diff,
-    find_diff,
     get_file_extention,
 )
+from gendiff.formats.plain import create_plain_format
+from gendiff.formats.stylish import create_stylish_format
 
 
-def create_stylish_format(data1: Dict[str, Any], data2: Dict[str, Any]) -> str:
-    dict_diff = find_diff(data1, data2)
-    formated_diff = add_indent(create_stylish_diff(*dict_diff.values()))
-    return formated_diff
-
-
-def load_json(file1_path: Path, file2_path: Path) -> None | str:
+def load_json(file1_path: Path, file2_path: Path, format_name) -> None | str:
     
     try:
         data1 = json.load(open(file1_path))
@@ -28,10 +20,15 @@ def load_json(file1_path: Path, file2_path: Path) -> None | str:
     except json.decoder.JSONDecodeError:
         return None
 
-    return create_stylish_format(data1, data2)
+    if format_name == 'plain':
+        return create_plain_format(data1, data2)
+    elif format_name == 'stylish':
+        return create_stylish_format(data1, data2)
+    else:
+        return 'Incorrect format'
 
 
-def load_yaml(file1_path: Path, file2_path: Path) -> None | str:
+def load_yaml(file1_path: Path, file2_path: Path, format_name) -> None | str:
 
     data1 = yaml.safe_load(open(file1_path))
     data2 = yaml.safe_load(open(file2_path))
@@ -42,13 +39,15 @@ def load_yaml(file1_path: Path, file2_path: Path) -> None | str:
     except AttributeError:
         return None
     
-    return create_stylish_format(data1, data2)
+    if format_name == 'plain':
+        return create_plain_format(data1, data2)
+    elif format_name == 'stylish':
+        return create_stylish_format(data1, data2)
+    else:
+        return 'Incorrect format'
         
 
 def generate_diff(file1: str, file2: str, format_name: str = 'stylish') -> None:
-
-    if format_name != 'stylish':
-        return
 
     file1_path = _get_data_path(file1)
     file2_path = _get_data_path(file2)
@@ -60,13 +59,13 @@ def generate_diff(file1: str, file2: str, format_name: str = 'stylish') -> None:
     file_extention = get_file_extention(file1, file2)
 
     if file_extention == 'json':
-        formated_diff = load_json(file1_path, file2_path)
+        formated_diff = load_json(file1_path, file2_path, format_name)
         if formated_diff is None:
             print('Incorrect JSON file uploaded', end='')
             return
         print(formated_diff, end='')
     elif file_extention == 'yaml':
-        formated_diff = load_yaml(file1_path, file2_path)
+        formated_diff = load_yaml(file1_path, file2_path, format_name)
         if formated_diff is None:
             print('Incorrect YAML file uploaded', end='')
             return
