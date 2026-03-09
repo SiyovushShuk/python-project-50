@@ -1,0 +1,63 @@
+{
+    "removed": [
+        "group2"
+    ],
+    "added": [
+        "group3"
+    ],
+    "updated": {
+        "common": {
+            "setting3": {
+                "new_value": [
+                    null
+                ],
+                "old_value": [
+                    true
+                ]
+            },
+            "setting6": {
+                "doge": {
+                    "wow": {
+                        "new_value": [
+                            "so much"
+                        ],
+                        "old_value": [
+                            ""
+                        ]
+                    }
+                },
+                "added": [
+                    "ops"
+                ]
+            },
+            "removed": [
+                "setting2"
+            ],
+            "added": [
+                "follow",
+                "setting4",
+                "setting5"
+            ]
+        },
+        "group1": {
+            "baz": {
+                "new_value": [
+                    "bars"
+                ],
+                "old_value": [
+                    "bas"
+                ]
+            },
+            "nest": {
+                "new_value": [
+                    "str"
+                ],
+                "old_value": [
+                    {
+                        "key": "value"
+                    }
+                ]
+            }
+        }
+    }
+}

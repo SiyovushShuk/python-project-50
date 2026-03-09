@@ -1,0 +1,19 @@
+{
+    "removed": [
+        "follow",
+        "proxy"
+    ],
+    "added": [
+        "verbose"
+    ],
+    "updated": {
+        "timeout": {
+            "new_value": [
+                20
+            ],
+            "old_value": [
+                50
+            ]
+        }
+    }
+}

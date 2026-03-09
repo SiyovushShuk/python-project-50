@@ -148,3 +148,36 @@ def test_difficult_different_plain(capsys):
     correct = "Incorrect file format or loaded files with different extentions"
 
     assert result.out == correct
+
+
+def test_json_format_json(capsys):
+
+    generate_diff('file1.json', 'file2.json', 'json')
+
+    result = capsys.readouterr()
+
+    correct = Path(__file__).parent / "test_data" / 'correct_json_format.txt'
+
+    assert result.out == open(correct, 'r', encoding='utf-8').read()
+
+
+def test_yaml_format_json(capsys):
+
+    generate_diff('file1.yaml', 'file2.yaml', 'json')
+
+    result = capsys.readouterr()
+
+    correct = Path(__file__).parent / "test_data" / 'correct_json_format.txt'
+
+    assert result.out == open(correct, 'r', encoding='utf-8').read()
+
+
+def test_difficult_format_json(capsys):
+
+    generate_diff('difficult_file1.json', 'difficult_file2.json', 'json')
+
+    result = capsys.readouterr()
+
+    correct = Path(__file__).parent / "test_data" / 'correct_difficult_format_json.txt'  # noqa: E501
+
+    assert result.out == open(correct, 'r', encoding='utf-8').read()
