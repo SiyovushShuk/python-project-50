@@ -7,9 +7,9 @@ from gendiff.formats.general_format_instruments import (
     _get_data_path,
     get_file_extention,
 )
+from gendiff.formats.json import create_json_format
 from gendiff.formats.plain import create_plain_format
 from gendiff.formats.stylish import create_stylish_format
-from gendiff.formats.json import create_json_format
 
 
 def load_json(file1_path: Path, file2_path: Path, format_name) -> None | str:
