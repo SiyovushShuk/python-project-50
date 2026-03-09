@@ -1,6 +1,6 @@
 from typing import Any, Dict, List, Set
 
-from gendiff.formats.general_format_instruments import _sort_logic, find_diff
+from gendiff.formats.general_format_instruments import find_diff
 
 
 def _create_format_line(file, lines, diff, symbol):
@@ -13,6 +13,19 @@ def _create_format_line(file, lines, diff, symbol):
             diff[f'{symbol} {line}'] = formatted__children_line
             continue
         diff[f'{symbol} {line}'] = file[line]
+
+
+def _sort_logic(item, sybmol_priority='-'):
+    name_line, _ = item
+
+    first_symbol = name_line[0]
+
+    clean_line = name_line.lstrip('+- ').strip()
+
+    if sybmol_priority == '-':
+        return clean_line, -ord(first_symbol)
+    else:
+        return clean_line, ord(first_symbol)
 
 
 def create_stylish_diff(

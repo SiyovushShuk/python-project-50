@@ -11,7 +11,7 @@ def _get_data_path(filename):
 
 def _is_line_changed(line_one, line_two):
     return line_one != line_two
-
+    
 
 def find_diff(first_file: Dict[str, Any], second_file: Dict[str, Any]
                ) -> Dict[str, Any]:
