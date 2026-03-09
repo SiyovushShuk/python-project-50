@@ -9,6 +9,7 @@ from gendiff.formats.general_format_instruments import (
 )
 from gendiff.formats.plain import create_plain_format
 from gendiff.formats.stylish import create_stylish_format
+from gendiff.formats.json import create_json_format
 
 
 def load_json(file1_path: Path, file2_path: Path, format_name) -> None | str:
@@ -24,6 +25,8 @@ def load_json(file1_path: Path, file2_path: Path, format_name) -> None | str:
         return create_plain_format(data1, data2)
     elif format_name == 'stylish':
         return create_stylish_format(data1, data2)
+    elif format_name == 'json':
+        return create_json_format(data1, data2)
     else:
         return 'Incorrect format'
 
@@ -43,6 +46,8 @@ def load_yaml(file1_path: Path, file2_path: Path, format_name) -> None | str:
         return create_plain_format(data1, data2)
     elif format_name == 'stylish':
         return create_stylish_format(data1, data2)
+    elif format_name == 'json':
+        return create_json_format(data1, data2)
     else:
         return 'Incorrect format'
         
