@@ -37,11 +37,9 @@ def format_children_diff(
                         children_diff['changed_lines']
                         )
     parent_line['removed'] = add_removed_lines(
-                                first_file[parent_name_line],
                                 children_diff['only_in_first']
                                 )
     parent_line['added'] = add_added_lines(
-                            second_file[parent_name_line],
                             children_diff['only_in_second']
                             )
     parent_line = {k: v for k, v in parent_line.items() if v}
