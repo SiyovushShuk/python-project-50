@@ -3,102 +3,87 @@ from pathlib import Path
 from gendiff.engine import generate_diff
 
 
-def test_base(capsys):
+def test_base():
 
-    generate_diff('file1.json', 'file2.json')
-
-    result = capsys.readouterr()
+    result = generate_diff('file1.json', 'file2.json')
 
     correct = Path(__file__).parent / "test_data" / 'correct.txt'
 
-    assert result.out == open(correct, 'r', encoding='utf-8').read()
+    assert result == open(correct, 'r', encoding='utf-8').read()
 
 
-def test_empty(capsys):
+def test_empty():
 
-    generate_diff('file1.json', 'empty.json')
-
-    result = capsys.readouterr()
+    result = generate_diff('file1.json', 'empty.json')
 
     correct = Path(__file__).parent / "test_data" / 'empty_correct.txt'
 
-    assert result.out == open(correct, 'r', encoding='utf-8').read()
+    assert result == open(correct, 'r', encoding='utf-8').read()
 
 
 def test_error_file(capsys):
-    
-    generate_diff('file1.json', 'error.json')
 
+    _ = generate_diff('file1.json', 'error.json')
     result = capsys.readouterr()
 
     assert result.out == 'Incorrect JSON file uploaded'
 
 
-def test_reverse(capsys):
+def test_reverse():
 
-    generate_diff('file2.json', 'file1.json')
-
-    result = capsys.readouterr()
+    result = generate_diff('file2.json', 'file1.json')
 
     correct = Path(__file__).parent / "test_data" / 'correct_reverse.txt'
 
-    assert result.out == open(correct, 'r', encoding='utf-8').read()
+    assert result == open(correct, 'r', encoding='utf-8').read()
 
 
 def test_missing_file(capsys):
     
-    generate_diff('missing.json', 'file2.json')
-
+    _ = generate_diff('missing.json', 'file2.json')
     result = capsys.readouterr()
 
     assert result.out == 'File not found!'
 
 
-def test_base_yaml(capsys):
+def test_base_yaml():
 
-    generate_diff('file1.yaml', 'file2.yaml')
-
-    result = capsys.readouterr()
+    result = generate_diff('file1.yaml', 'file2.yaml')
 
     correct = Path(__file__).parent / "test_data" / 'correct.txt'
 
-    assert result.out == open(correct, 'r', encoding='utf-8').read()
+    assert result == open(correct, 'r', encoding='utf-8').read()
 
 
 def test_missing_yaml(capsys):
     
-    generate_diff('missing.yml', 'file2.yaml')
-
+    _ = generate_diff('missing.yml', 'file2.yaml')
     result = capsys.readouterr()
 
     assert result.out == 'Incorrect YAML file uploaded'
 
 
-def test_base_yml(capsys):
+def test_base_yml():
 
-    generate_diff('file1.yaml', 'file3.yml')
-
-    result = capsys.readouterr()
+    result = generate_diff('file1.yaml', 'file3.yml')
 
     correct = Path(__file__).parent / "test_data" / 'correct.txt'
 
-    assert result.out == open(correct, 'r', encoding='utf-8').read()
+    assert result == open(correct, 'r', encoding='utf-8').read()
 
 
-def test_difficult_json(capsys):
+def test_difficult_json():
 
-    generate_diff('difficult_file1.json', 'difficult_file2.json')
-
-    result = capsys.readouterr()
+    result = generate_diff('difficult_file1.json', 'difficult_file2.json')
 
     correct = Path(__file__).parent / "test_data" / 'correct_difficult_data.txt'
 
-    assert result.out == open(correct, 'r', encoding='utf-8').read()
+    assert result == open(correct, 'r', encoding='utf-8').read()
 
 
 def test_different_file_extentions(capsys):
-    generate_diff('file1.json', 'file2.yaml')
-
+    
+    _ = generate_diff('file1.json', 'file2.yaml')
     result = capsys.readouterr()
 
     correct = "Incorrect file format or loaded files with different extentions"
@@ -106,42 +91,36 @@ def test_different_file_extentions(capsys):
     assert result.out == correct
 
 
-def test_difficult_yaml(capsys):
+def test_difficult_yaml():
 
-    generate_diff('difficult_file1.yml', 'difficult_file2.yaml')
-
-    result = capsys.readouterr()
+    result = generate_diff('difficult_file1.yml', 'difficult_file2.yaml')
 
     correct = Path(__file__).parent / "test_data" / 'correct_difficult_data.txt'
 
-    assert result.out == open(correct, 'r', encoding='utf-8').read()
+    assert result == open(correct, 'r', encoding='utf-8').read()
 
 
-def test_difficult_json_plain(capsys):
+def test_difficult_json_plain():
 
-    generate_diff('difficult_file1.json', 'difficult_file2.json', 'plain')
-
-    result = capsys.readouterr()
+    result = generate_diff('difficult_file1.json', 'difficult_file2.json', 'plain')  # noqa: E501
 
     correct = Path(__file__).parent / "test_data" / 'correct_difficult_plain_data.txt'  # noqa: E501
 
-    assert result.out == open(correct, 'r', encoding='utf-8').read()
+    assert result == open(correct, 'r', encoding='utf-8').read()
 
 
-def test_difficult_yaml_plain(capsys):
+def test_difficult_yaml_plain():
 
-    generate_diff('difficult_file1.yml', 'difficult_file2.yaml', 'plain')
-
-    result = capsys.readouterr()
+    result = generate_diff('difficult_file1.yml', 'difficult_file2.yaml', 'plain')  # noqa: E501
 
     correct = Path(__file__).parent / "test_data" / 'correct_difficult_plain_data.txt'  # noqa: E501
 
-    assert result.out == open(correct, 'r', encoding='utf-8').read()
+    assert result == open(correct, 'r', encoding='utf-8').read()
 
 
 def test_difficult_different_plain(capsys):
 
-    generate_diff('difficult_file1.json', 'difficult_file2.yaml', 'plain')
+    _ = generate_diff('difficult_file1.json', 'difficult_file2.yaml', 'plain')  # noqa: E501
 
     result = capsys.readouterr()
 
@@ -150,56 +129,46 @@ def test_difficult_different_plain(capsys):
     assert result.out == correct
 
 
-def test_json_format_json(capsys):
+def test_json_format_json():
 
-    generate_diff('file1.json', 'file2.json', 'json')
-
-    result = capsys.readouterr()
+    result = generate_diff('file1.json', 'file2.json', 'json')
 
     correct = Path(__file__).parent / "test_data" / 'correct_json_format.txt'
 
-    assert result.out == open(correct, 'r', encoding='utf-8').read()
+    assert result == open(correct, 'r', encoding='utf-8').read()
 
 
-def test_yaml_format_json(capsys):
+def test_yaml_format_json():
 
-    generate_diff('file1.yaml', 'file2.yaml', 'json')
-
-    result = capsys.readouterr()
+    result = generate_diff('file1.yaml', 'file2.yaml', 'json')
 
     correct = Path(__file__).parent / "test_data" / 'correct_json_format.txt'
 
-    assert result.out == open(correct, 'r', encoding='utf-8').read()
+    assert result == open(correct, 'r', encoding='utf-8').read()
 
 
-def test_difficult_format_json(capsys):
+def test_difficult_format_json():
 
-    generate_diff('difficult_file1.json', 'difficult_file2.json', 'json')
-
-    result = capsys.readouterr()
+    result = generate_diff('difficult_file1.json', 'difficult_file2.json', 'json')  # noqa: E501
 
     correct = Path(__file__).parent / "test_data" / 'correct_difficult_format_json.txt'  # noqa: E501
 
-    assert result.out == open(correct, 'r', encoding='utf-8').read()
+    assert result == open(correct, 'r', encoding='utf-8').read()
 
 
-def test_yaml_plain(capsys):
+def test_yaml_plain():
 
-    generate_diff('file1.yaml', 'file2.yaml', 'plain')
-
-    result = capsys.readouterr()
+    result = generate_diff('file1.yaml', 'file2.yaml', 'plain')
 
     correct = Path(__file__).parent / "test_data" / 'correct_plain_data.txt'  # noqa: E501
 
-    assert result.out == open(correct, 'r', encoding='utf-8').read()
+    assert result == open(correct, 'r', encoding='utf-8').read()
 
 
-def test_json_plain(capsys):
+def test_json_plain():
 
-    generate_diff('file1.json', 'file2.json', 'plain')
-
-    result = capsys.readouterr()
+    result = generate_diff('file1.json', 'file2.json', 'plain')
 
     correct = Path(__file__).parent / "test_data" / 'correct_plain_data.txt'  # noqa: E501
 
-    assert result.out == open(correct, 'r', encoding='utf-8').read()
+    assert result == open(correct, 'r', encoding='utf-8').read()
