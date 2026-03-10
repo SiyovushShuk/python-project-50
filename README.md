@@ -35,3 +35,28 @@ make install
 make build
 make package-install
 ```
+
+### Example
+
+You can start program with "gendiff" and can write commands with "-h" flag
+
+```bash
+gendiff -h
+
+usage: gendiff [-h] [-f FORMAT] first_file second_file
+
+Compares two configuration files and shows a difference.
+
+positional arguments:
+  first_file
+  second_file
+
+options:
+  -h, --help           show this help message and exit
+  -f, --format FORMAT  set format of output
+
+```
+
+### Demo
+
+[![asciicast](https://asciinema.org/a/8oL5NrYZdEySySUt.svg)](https://asciinema.org/a/8oL5NrYZdEySySUt)
