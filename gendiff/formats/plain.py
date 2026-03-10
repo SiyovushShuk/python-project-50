@@ -3,14 +3,16 @@ from typing import Any, Dict, List, Set
 from gendiff.formats.general_format_instruments import find_diff
 
 
-def format_complex_str_value(value: Any) -> str | Any:
-
+def format_complex_str_value(value: Any) -> str:
+    if isinstance(value, dict):
+        return '[complex value]'
+    if isinstance(value, bool):
+        return str(value).lower()
+    if value is None:
+        return 'null'
     if isinstance(value, str):
         return f"'{value}'"
-    elif isinstance(value, dict):
-        return '[complex value]'
-    else:
-        return value
+    return str(value)
 
 
 def create_parent_property(parent_property: str, key: str) -> str:
