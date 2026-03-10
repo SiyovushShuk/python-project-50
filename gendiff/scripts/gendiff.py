@@ -1,6 +1,6 @@
 import argparse
 
-from gendiff.formats.gendiff import generate_diff
+from gendiff.formats.engine import generate_diff
 
         
 def main():

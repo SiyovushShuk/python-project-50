@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from gendiff.formats.gendiff import generate_diff
+from gendiff.engine import generate_diff
 
 
 def test_base(capsys):
