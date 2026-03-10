@@ -73,7 +73,7 @@ def create_update_line(
             first_value = '[complex value]'
             second_value = format_complex_str_value(file2[key])
         elif isinstance(file2[key], dict):
-            first_value = format_complex_str_value(file2[key])
+            first_value = format_complex_str_value(file1[key])
             second_value = '[complex value]'
         else:
             first_value = format_complex_str_value(file1[key])
