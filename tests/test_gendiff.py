@@ -181,3 +181,25 @@ def test_difficult_format_json(capsys):
     correct = Path(__file__).parent / "test_data" / 'correct_difficult_format_json.txt'  # noqa: E501
 
     assert result.out == open(correct, 'r', encoding='utf-8').read()
+
+
+def test_yaml_plain(capsys):
+
+    generate_diff('file1.yaml', 'file2.yaml', 'plain')
+
+    result = capsys.readouterr()
+
+    correct = Path(__file__).parent / "test_data" / 'correct_plain_data.txt'  # noqa: E501
+
+    assert result.out == open(correct, 'r', encoding='utf-8').read()
+
+
+def test_json_plain(capsys):
+
+    generate_diff('file1.json', 'file2.json', 'plain')
+
+    result = capsys.readouterr()
+
+    correct = Path(__file__).parent / "test_data" / 'correct_plain_data.txt'  # noqa: E501
+
+    assert result.out == open(correct, 'r', encoding='utf-8').read()
