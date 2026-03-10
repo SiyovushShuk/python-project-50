@@ -21,30 +21,6 @@ def add_added_lines(name_file_lines: List[str]) -> List[str]:
     return added
 
 
-def format_children_diff(
-                first_file: Path,
-                second_file: Path,
-                parent_line: Dict[str, Any],
-                parent_name_line: str
-                ) -> None:
-    children_diff = find_diff(
-                    first_file[parent_name_line],
-                    second_file[parent_name_line]
-                    )
-    parent_line = add_updated_lines(
-                        first_file[parent_name_line],
-                        second_file[parent_name_line],
-                        children_diff['changed_lines']
-                        )
-    parent_line['removed'] = add_removed_lines(
-                                children_diff['only_in_first']
-                                )
-    parent_line['added'] = add_added_lines(
-                            children_diff['only_in_second']
-                            )
-    parent_line = {k: v for k, v in parent_line.items() if v}
-
-
 def add_updated_lines(
                 first_file: Path,
                 second_file: Path,
