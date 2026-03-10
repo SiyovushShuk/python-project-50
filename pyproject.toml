@@ -9,7 +9,6 @@ readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
     "pyyaml>=6.0.3",
-    "ruff>=0.15.2",
 ]
 
 [build-system]
@@ -23,7 +22,7 @@ packages = ["gendiff"]
 dev = [
     "pytest>=9.0.2",
     "pytest-cov>=7.0.0",
-    "ruff>=0.14.14",
+    "ruff>=0.15.5",
 ]
 
 [project.scripts]
