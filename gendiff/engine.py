@@ -12,65 +12,77 @@ from gendiff.formats.plain import create_plain_format
 from gendiff.formats.stylish import create_stylish_format
 
 
-def load_json(file1_path: Path, file2_path: Path, format_name) -> None | str:
+def load_json(
+            first_file_path: Path,
+            second_file_path: Path,
+            format_name
+        ) -> None | str:
     
     try:
-        data1 = json.load(open(file1_path))
-        data2 = json.load(open(file2_path))
+        first_file = json.load(open(first_file_path))
+        second_file = json.load(open(second_file_path))
         
     except json.decoder.JSONDecodeError:
         return None
 
     if format_name == 'plain':
-        return create_plain_format(data1, data2)
+        return create_plain_format(first_file, second_file)
     elif format_name == 'stylish':
-        return create_stylish_format(data1, data2)
+        return create_stylish_format(first_file, second_file)
     elif format_name == 'json':
-        return create_json_format(data1, data2)
+        return create_json_format(first_file, second_file)
     else:
         return 'Incorrect format'
 
 
-def load_yaml(file1_path: Path, file2_path: Path, format_name) -> None | str:
+def load_yaml(
+            first_file_path: Path,
+            second_file_path: Path,
+            format_name
+        ) -> None | str:
 
-    data1 = yaml.safe_load(open(file1_path))
-    data2 = yaml.safe_load(open(file2_path))
+    first_file_data = yaml.safe_load(open(first_file_path))
+    second_file_data = yaml.safe_load(open(second_file_path))
     
     try:
-        data1.keys()
-        data2.keys()    
+        first_file_data.keys()
+        second_file_data.keys()    
     except AttributeError:
         return None
     
     if format_name == 'plain':
-        return create_plain_format(data1, data2)
+        return create_plain_format(first_file_data, second_file_data)
     elif format_name == 'stylish':
-        return create_stylish_format(data1, data2)
+        return create_stylish_format(first_file_data, second_file_data)
     elif format_name == 'json':
-        return create_json_format(data1, data2)
+        return create_json_format(first_file_data, second_file_data)
     else:
         return 'Incorrect format'
         
 
-def generate_diff(file1: str, file2: str, format_name: str = 'stylish') -> None:
+def generate_diff(
+            first_file_name: str,
+            second_file_name: str,
+            format_name: str = 'stylish'
+        ) -> None:
 
-    file1_path = _get_data_path(file1)
-    file2_path = _get_data_path(file2)
+    first_file_path = _get_data_path(first_file_name)
+    second_file_path = _get_data_path(second_file_name)
 
-    if file1_path is None or file2_path is None:
+    if first_file_path is None or second_file_path is None:
         print('File not found!', end='')
         return
     
-    file_extention = get_file_extention(file1, file2)
+    file_extention = get_file_extention(first_file_name, second_file_name)
 
     if file_extention == 'json':
-        formated_diff = load_json(file1_path, file2_path, format_name)
+        formated_diff = load_json(first_file_path, second_file_path, format_name)
         if formated_diff is None:
             print('Incorrect JSON file uploaded', end='')
             return
         print(formated_diff, end='')
     elif file_extention == 'yaml':
-        formated_diff = load_yaml(file1_path, file2_path, format_name)
+        formated_diff = load_yaml(first_file_path, second_file_path, format_name)
         if formated_diff is None:
             print('Incorrect YAML file uploaded', end='')
             return

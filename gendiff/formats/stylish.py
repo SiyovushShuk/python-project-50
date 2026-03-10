@@ -126,10 +126,10 @@ def add_indent(
 
 
 def create_stylish_format(
-                file_one_data: Dict[str, Any],
-                file_two_data: Dict[str, Any]
+                first_data: Dict[str, Any],
+                second_data: Dict[str, Any]
                 ) -> str:
     
-    dict_diff = find_diff(file_one_data, file_two_data)
+    dict_diff = find_diff(first_data, second_data)
     formated_diff = add_indent(create_stylish_diff(*dict_diff.values()))
     return formated_diff

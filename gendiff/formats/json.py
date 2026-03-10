@@ -110,7 +110,10 @@ def format_data_to_json(
     return json.dumps(diff, indent=4)
 
 
-def create_json_format(data1: Dict[str, Any], data2: Dict[str, Any]) -> str:
-    diff = find_diff(data1, data2)
+def create_json_format(
+            first_data: Dict[str, Any],
+            second_data: Dict[str, Any]
+        ) -> str:
+    diff = find_diff(first_data, second_data)
     formated_json = format_data_to_json(*diff.values())
     return formated_json

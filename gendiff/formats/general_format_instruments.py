@@ -9,12 +9,14 @@ def _get_data_path(filename: str) -> Path | None:
         return None
 
 
-def _is_line_changed(line_one, line_two):
-    return line_one != line_two
+def _is_line_changed(first_line, second_line):
+    return first_line != second_line
     
 
-def find_diff(first_file: Dict[str, Any], second_file: Dict[str, Any]
-               ) -> Dict[str, Any]:
+def find_diff(
+        first_file: Dict[str, Any],
+        second_file: Dict[str, Any]
+    ) -> Dict[str, Any]:
     
     line_diff: Dict = {}
     line_diff['first_file'] = first_file
@@ -46,9 +48,9 @@ def find_diff(first_file: Dict[str, Any], second_file: Dict[str, Any]
     return line_diff
     
 
-def get_file_extention(file1: str, file2: str) -> str | None:
-    _, file1_extention = file1.split('.')
-    _, file2_extention = file2.split('.')
+def get_file_extention(first_file: str, second_file: str) -> str | None:
+    _, file1_extention = first_file.split('.')
+    _, file2_extention = second_file.split('.')
 
     yaml_extentions = ['yaml', 'yml']
 
