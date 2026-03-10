@@ -4,6 +4,8 @@ from typing import Any, Dict, Set
 
 def _get_data_path(filename: str) -> Path | None:
     try:
+        if Path(filename).is_absolute():
+            return Path(filename).resolve()
         return next(Path('.').rglob(filename)).resolve()
     except StopIteration:
         return None
