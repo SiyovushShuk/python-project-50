@@ -99,7 +99,7 @@ def generate_diff(
             print('Incorrect YAML file uploaded', end='')
             return
         
-        formated_diff = formated_diff + '\n'
+        formated_diff = formated_diff
         return formated_diff
 
     else:
