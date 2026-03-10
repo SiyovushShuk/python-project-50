@@ -86,8 +86,9 @@ def generate_diff(
             print('Incorrect JSON file uploaded', end='')
             return
         
-        print(formated_diff)
-        return formated_diff + '\n'
+        formated_diff = formated_diff + '\n'
+        print(formated_diff, end='')
+        return formated_diff
 
     elif file_extention == 'yaml':
         formated_diff = load_yaml(
@@ -99,8 +100,9 @@ def generate_diff(
             print('Incorrect YAML file uploaded', end='')
             return
         
-        print(formated_diff)
-        return formated_diff + '\n'
+        formated_diff = formated_diff + '\n'
+        print(formated_diff, end='')
+        return formated_diff
 
     else:
         print('Incorrect file format or loaded files with different extentions',
