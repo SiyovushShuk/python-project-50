@@ -64,14 +64,13 @@ def generate_diff(
             first_file_name: str,
             second_file_name: str,
             format_name: str = 'stylish'
-        ) -> None:
+        ) -> None | str:
 
     first_file_path = _get_data_path(first_file_name)
     second_file_path = _get_data_path(second_file_name)
 
     if first_file_path is None or second_file_path is None:
-        print('File not found!', end='')
-        return
+        return 'File not found!'
     
     file_extention = get_file_extention(first_file_name, second_file_name)
 
@@ -83,8 +82,7 @@ def generate_diff(
                         format_name)
         
         if formated_diff is None:
-            print('Incorrect JSON file uploaded', end='')
-            return
+            return 'Incorrect JSON file uploaded'
         
         return formated_diff
 
@@ -95,14 +93,12 @@ def generate_diff(
                         format_name)
         
         if formated_diff is None:
-            print('Incorrect YAML file uploaded', end='')
-            return
+            return 'Incorrect YAML file uploaded'
         
         return formated_diff
 
     else:
-        print('Incorrect file format or loaded files with different extentions',
-               end='')
+        return 'Incorrect file format or loaded files with different extentions'
 
     
     

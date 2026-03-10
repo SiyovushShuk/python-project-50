@@ -21,12 +21,11 @@ def test_empty():
     assert result == open(correct, 'r', encoding='utf-8').read()
 
 
-def test_error_file(capsys):
+def test_error_file():
 
-    _ = generate_diff('file1.json', 'error.json')
-    result = capsys.readouterr()
+    result = generate_diff('file1.json', 'error.json')
 
-    assert result.out == 'Incorrect JSON file uploaded'
+    assert result == 'Incorrect JSON file uploaded'
 
 
 def test_reverse():
@@ -38,12 +37,11 @@ def test_reverse():
     assert result == open(correct, 'r', encoding='utf-8').read()
 
 
-def test_missing_file(capsys):
+def test_missing_file():
     
-    _ = generate_diff('missing.json', 'file2.json')
-    result = capsys.readouterr()
+    result = generate_diff('missing.json', 'file2.json')
 
-    assert result.out == 'File not found!'
+    assert result == 'File not found!'
 
 
 def test_base_yaml():
@@ -55,12 +53,11 @@ def test_base_yaml():
     assert result == open(correct, 'r', encoding='utf-8').read()
 
 
-def test_missing_yaml(capsys):
+def test_missing_yaml():
     
-    _ = generate_diff('missing.yml', 'file2.yaml')
-    result = capsys.readouterr()
+    result = generate_diff('missing.yml', 'file2.yaml')
 
-    assert result.out == 'Incorrect YAML file uploaded'
+    assert result == 'Incorrect YAML file uploaded'
 
 
 def test_base_yml():
@@ -81,14 +78,13 @@ def test_difficult_json():
     assert result == open(correct, 'r', encoding='utf-8').read()
 
 
-def test_different_file_extentions(capsys):
+def test_different_file_extentions():
     
-    _ = generate_diff('file1.json', 'file2.yaml')
-    result = capsys.readouterr()
+    result = generate_diff('file1.json', 'file2.yaml')
 
-    correct = "Incorrect file format or loaded files with different extentions"
+    correct = "Incorrect file format or loaded files with different extentions"  # noqa: E501
 
-    assert result.out == correct
+    assert result == correct
 
 
 def test_difficult_yaml():
@@ -118,15 +114,13 @@ def test_difficult_yaml_plain():
     assert result == open(correct, 'r', encoding='utf-8').read()
 
 
-def test_difficult_different_plain(capsys):
+def test_difficult_different_plain():
 
-    _ = generate_diff('difficult_file1.json', 'difficult_file2.yaml', 'plain')  # noqa: E501
+    result = generate_diff('difficult_file1.json', 'difficult_file2.yaml', 'plain')  # noqa: E501
 
-    result = capsys.readouterr()
+    correct = "Incorrect file format or loaded files with different extentions"  # noqa: E501
 
-    correct = "Incorrect file format or loaded files with different extentions"
-
-    assert result.out == correct
+    assert result == correct
 
 
 def test_json_format_json():
