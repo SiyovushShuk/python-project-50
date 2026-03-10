@@ -87,7 +87,7 @@ def generate_diff(
             return
         
         print(formated_diff, end='')
-        return formated_diff
+        return formated_diff + '\n'
 
     elif file_extention == 'yaml':
         formated_diff = load_yaml(
@@ -100,7 +100,7 @@ def generate_diff(
             return
         
         print(formated_diff, end='')
-        return formated_diff
+        return formated_diff + '\n'
 
     else:
         print('Incorrect file format or loaded files with different extentions',
