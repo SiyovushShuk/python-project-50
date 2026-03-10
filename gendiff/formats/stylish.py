@@ -1,9 +1,16 @@
+from pathlib import Path
 from typing import Any, Dict, List, Set
 
 from gendiff.formats.general_format_instruments import find_diff
 
 
-def _create_format_line(file, lines, diff, symbol):
+def _create_format_line(
+            file: Path,
+            lines: List[str],
+            diff: Dict[str, Any],
+            symbol: str
+            ) -> None:
+    
     for line in lines:
         if isinstance(file[line], dict):
             formatted__children_line = {}
@@ -15,7 +22,7 @@ def _create_format_line(file, lines, diff, symbol):
         diff[f'{symbol} {line}'] = file[line]
 
 
-def _sort_logic(item, sybmol_priority='-'):
+def _sort_logic(item: str, sybmol_priority: str = '-'):
     name_line, _ = item
 
     first_symbol = name_line[0]
@@ -37,7 +44,8 @@ def create_stylish_diff(
         changed_lines: Set[str],
         /
         ) -> Dict[str, Any]:
-    formated_diff: Dict = {}
+    
+    formated_diff: Dict[str, Any] = {}
 
     _create_format_line(first_file, only_in_first, formated_diff, '-')
     _create_format_line(second_file, only_in_second, formated_diff, '+')
@@ -117,7 +125,11 @@ def add_indent(
     return result
 
 
-def create_stylish_format(data1: Dict[str, Any], data2: Dict[str, Any]) -> str:
-    dict_diff = find_diff(data1, data2)
+def create_stylish_format(
+                file_one_data: Dict[str, Any],
+                file_two_data: Dict[str, Any]
+                ) -> str:
+    
+    dict_diff = find_diff(file_one_data, file_two_data)
     formated_diff = add_indent(create_stylish_diff(*dict_diff.values()))
     return formated_diff

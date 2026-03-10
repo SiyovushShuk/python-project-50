@@ -2,7 +2,7 @@ from pathlib import Path
 from typing import Any, Dict, Set
 
 
-def _get_data_path(filename):
+def _get_data_path(filename: str) -> Path | None:
     try:
         return next(Path('.').rglob(filename)).resolve()
     except StopIteration:

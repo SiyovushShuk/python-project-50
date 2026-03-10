@@ -1,10 +1,11 @@
 import json
-from typing import Any, Dict, Set
+from pathlib import Path
+from typing import Any, Dict, List, Set
 
 from gendiff.formats.general_format_instruments import find_diff
 
 
-def add_removed_lines(file, name_file_lines):
+def add_removed_lines(name_file_lines: List[str]) -> List[str]:
     removed = []
     for name_line in name_file_lines:
         removed.append(name_line)
@@ -12,7 +13,7 @@ def add_removed_lines(file, name_file_lines):
     return removed
 
 
-def add_added_lines(file, name_file_lines):
+def add_added_lines(name_file_lines: List[str]) -> List[str]:
     added = []
     for name_line in name_file_lines:
         added.append(name_line)
@@ -21,11 +22,11 @@ def add_added_lines(file, name_file_lines):
 
 
 def format_children_diff(
-                first_file,
-                second_file,
-                parent_line,
-                parent_name_line
-                ):
+                first_file: Path,
+                second_file: Path,
+                parent_line: Dict[str, Any],
+                parent_name_line: str
+                ) -> None:
     children_diff = find_diff(
                     first_file[parent_name_line],
                     second_file[parent_name_line]
@@ -46,8 +47,14 @@ def format_children_diff(
     parent_line = {k: v for k, v in parent_line.items() if v}
 
 
-def add_updated_lines(first_file, second_file, name_file_lines):
-    updated = {}
+def add_updated_lines(
+                first_file: Path,
+                second_file: Path,
+                name_file_lines: List[Any]
+        ) -> Dict[str, Any]:
+    
+    updated: Dict[str, Any] = {}
+
     for name_line in name_file_lines:
         updated[name_line] = {
             'new_value': [],
@@ -66,19 +73,19 @@ def add_updated_lines(first_file, second_file, name_file_lines):
                                         children_diff['changed_lines']
                                         )
             updated[name_line]['removed'] = add_removed_lines(
-                                                first_file[name_line],
                                                 children_diff['only_in_first']
                                                 )
             updated[name_line]['added'] = add_added_lines(
-                                                second_file[name_line],
                                                 children_diff['only_in_second']
                                                 )
             updated[name_line] = {k: v for k,
                                     v in updated[name_line].items() if v}
-            continue 
+            continue
+
         updated[name_line]['old_value'].append(first_file[name_line])
         updated[name_line]['new_value'].append(second_file[name_line])
         updated[name_line] = {k: v for k, v in updated[name_line].items() if v}
+
     updated_keys = sorted(updated)
     sorted_updated_elements = {key: updated[key] for key in updated_keys}
     return sorted_updated_elements
@@ -92,11 +99,12 @@ def format_data_to_json(
         unchanged_lines: Set[str],
         changed_lines: Set[str],
         /
-    ) -> Dict[str, Any]:
-    diff = {}
+    ) -> str:
 
-    diff['removed'] = add_removed_lines(first_file, only_in_first)
-    diff['added'] = add_added_lines(second_file, only_in_second)
+    diff: [str, Any] = {}
+
+    diff['removed'] = add_removed_lines(only_in_first)
+    diff['added'] = add_added_lines(only_in_second)
     diff['updated'] = add_updated_lines(first_file, second_file, changed_lines)
 
     return json.dumps(diff, indent=4)
