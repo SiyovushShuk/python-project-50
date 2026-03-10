@@ -76,17 +76,30 @@ def generate_diff(
     file_extention = get_file_extention(first_file_name, second_file_name)
 
     if file_extention == 'json':
-        formated_diff = load_json(first_file_path, second_file_path, format_name)
+
+        formated_diff = load_json(
+                        first_file_path,
+                        second_file_path,
+                        format_name)
+        
         if formated_diff is None:
             print('Incorrect JSON file uploaded', end='')
             return
+        
         print(formated_diff, end='')
+
     elif file_extention == 'yaml':
-        formated_diff = load_yaml(first_file_path, second_file_path, format_name)
+        formated_diff = load_yaml(
+                        first_file_path,
+                        second_file_path,
+                        format_name)
+        
         if formated_diff is None:
             print('Incorrect YAML file uploaded', end='')
             return
+        
         print(formated_diff, end='')
+
     else:
         print('Incorrect file format or loaded files with different extentions',
                end='')
