@@ -4,7 +4,7 @@ authors = [
 ]
 name = "hexlet-code"
 version = "0.1.0"
-description = "Add your description here"
+description = "This package show differences between two files in console. Formats: stylish (default format), plain and json"
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
